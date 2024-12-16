@@ -11,11 +11,12 @@ class Paddle{
     field boolean isLeft;
 
     //Ctor
-    function void Paddle (boolean isLeft) {
+    constructor void Paddle (boolean isLeft) {
         // constants
         let height = 256/3;
         let width = 10;
         let gap = 5;
+
         // vars
         let y = (256/2) - (height/2);
         if (isLeft)  { 
@@ -24,29 +25,65 @@ class Paddle{
         else { 
             x=512-gap-width; 
         }
-
+        do draw();
         return this;
     }
 
     // move paddle according to KBD arrows press
-    function void update () {
+    method void update () {
         // code
+        return;
     }
 
-    function int getX () {
+    /** Moves the paddle up by 2 pixels. */
+   method void moveUp() {
+        if (y > 1) {
+            do erase();
+            let y = y - 2;
+            do draw();
+        }
+        return;
+    }
+
+    /** Moves the paddle down by 2 pixels. */
+    method void moveDown() {
+        if ((y + height) < 254) {
+            do erase();
+            let y = y + 2;
+            do draw();
+        }
+        return;
+    }
+
+    /** Draws the paddle on the screen. */
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + width, y + height);
+        return;
+    }
+
+    /** erases the paddle from the screen. */
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + width, y + height);
+        return;
+     }
+
+    method int getX () {
         return x;
     }
-    function int getY () {
+    method int getY () {
         return y;
     }
-    function int getHeight () {
+    method int getHeight () {
         return height;
     }
-    function int getWidth () {
+    method int getWidth () {
         return width;
     }
 
-    function void dispose() () {
+    method void dispose() () {
         do Memory.deAlloc(this);
+        return;
     }
 }

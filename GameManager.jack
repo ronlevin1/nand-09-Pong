@@ -8,7 +8,7 @@ class GameManagar{
     field int leftScore, rightScore;
 
     //Ctor
-    function GameManagar new () {
+    constructor GameManagar new () {
         let leftPaddle = Paddle.new(true);
         let rightPaddle = Paddle.new(false);
         let leftScore = 0;
@@ -16,8 +16,11 @@ class GameManagar{
         let ball = Ball.new(100); // TODO: change velocity
     }
 
-    function void run () {
+    method void run () {
+        // draw top and bottom borders
+        // print score panel
         while (true) {
+            // consider moving these to update().
             do ball.move();
             do leftPaddle.update();
             do rightPaddle.update();
@@ -25,14 +28,53 @@ class GameManagar{
             do checkScore(ball);
             do update();
             //TODO: check win
+            return;
         }
     }
 
-    function void update () {
-        // update screen printing of all object
+    /** Runs the game: handles the user's inputs and moves the square accordingly */
+    // method void run() {
+    //     var char key;  // the key currently pressed by the user
+    //     var boolean exit;
+    //     let exit = false;
+        
+    //     while (~exit) {
+    //         // waits for a key to be pressed
+    //         while (key = 0) {
+    //             let key = Keyboard.keyPressed();
+    //             do moveSquare();
+    //         }
+    //         if (key = 81)  { let exit = true; }     // q key
+    //         if (key = 90)  { do square.decSize(); } // z key
+    //         if (key = 88)  { do square.incSize(); } // x key
+    //         if (key = 131) { let direction = 1; }   // up arrow
+    //         if (key = 133) { let direction = 2; }   // down arrow
+    //         if (key = 130) { let direction = 3; }   // left arrow
+    //         if (key = 132) { let direction = 4; }   // right arrow
+
+    //         // waits for the key to be released
+    //         while (~(key = 0)) {
+    //             let key = Keyboard.keyPressed();
+    //             do moveSquare();
+    //         }
+    //     } // while
+    //     return;
+    // }
+
+    method void update () {
+        //update all objects and look for collisions.
+        // for(GameObject obj : gameObjects)
+        //     obj.update(deltaTime);
+        // if(camera != null)
+        //     camera.update(deltaTime);
+        // gameObjects.update(deltaTime);
+        // gameObjects.handleCollisions();
+
+        do checkScore();
+        return;
     }
 
-    function void checkScore(Ball ball) {
+    method void checkScore(Ball ball) {
         if (ball.getX() <= 0) { // Right player scores
             let rightScore = rightScore + 1;
             do ball.reset();
@@ -42,19 +84,22 @@ class GameManagar{
             do ball.reset();
         }
         do displayScore();
+        return;
     }
 
-    function void displayScore() {
+    method void displayScore() {
         do Screen.print("Left: ");
         do Screen.printInt(leftScore);
         do Screen.print("  Right: ");
         do Screen.printInt(rightScore);
+        return;
     }
 
-    function void dispose() () {
+    method void dispose() () {
         do ball.dispose();
         do leftPaddle.dispose();
         do rightPaddle.dispose();
         do Memory.deAlloc(this);
+        return;
     }
 }

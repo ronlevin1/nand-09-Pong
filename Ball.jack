@@ -4,38 +4,62 @@ class Ball{
     // - Detect and handle collisions with walls and paddles.
     // - Reset the ball after scoring.
 
+    // constants.
     field int x;
     field int y;
     field int r;
-
+    // fields
     field int velX;
     field int velY;
 
     // Ctor
-    function void Ball new(int velocity) {
+    constructor void Ball new(int velocity) {
         let x = 512 / 2; // half screen width
         let y = 256 / 2; // half screen height
-        let dx = velocity; // Initial horizontal direction
-        let dy = velocity; // Initial vertical direction
+        let r = 10;
+
+        let velX = velocity; // Initial horizontal direction
+        let velY = velocity; // Initial vertical direction
         return this;
     }
-    function void update () {
+    method void update () {
         // code
+        return;
     }
-    
-    function void move (/** arguments */) {
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawCircle(x, y, r);
+        return;
+    }
+
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawCircle(x, y, r);
+        return;
+    }
+
+    method void move (/** arguments */) {
         // check wall collisions here
+        return;
     }
 
-    function void checkCollision (Paddle leftPaddle, Paddle rightPaddle) {
-        // code
+    method void checkCollision (Paddle leftPaddle, Paddle rightPaddle) {
+        return;
+        }
+
+    method void Reset () {
+        let x = 512 / 2; // half screen width
+        let y = 256 / 2; // half screen height
+        // let r = 10;
+
+        let velX = -velX; // opposite horizontal direction
+        let velY = velY; // Initial vertical direction
+        return this;
     }
 
-    function void Reset () {
-        // code
-    }
-
-    function void dispose() () {
+    method void dispose() () {
         do Memory.deAlloc(this);
+        return;
     }
 }
