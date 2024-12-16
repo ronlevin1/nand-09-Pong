@@ -10,6 +10,10 @@
   * You can include as many classes and functions as you want.
   */
 class Main {
+  // Responsibilities:
+  // - Initialize the game: create the ball, paddles, and screen.
+  // - Run the game loop: handle player input, update the ball and paddle positions, check collisions, and update the display.
+  
   function void main() {
     // Your code goes here!
     return;

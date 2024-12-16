@@ -1,0 +1,41 @@
+class Ball{
+    // Responsibilities:
+    // - Manage the ball's position and velocity.
+    // - Detect and handle collisions with walls and paddles.
+    // - Reset the ball after scoring.
+
+    field int x;
+    field int y;
+    field int r;
+
+    field int velX;
+    field int velY;
+
+    // Ctor
+    function void Ball new(int velocity) {
+        let x = 512 / 2; // half screen width
+        let y = 256 / 2; // half screen height
+        let dx = velocity; // Initial horizontal direction
+        let dy = velocity; // Initial vertical direction
+        return this;
+    }
+    function void update () {
+        // code
+    }
+    
+    function void move (/** arguments */) {
+        // check wall collisions here
+    }
+
+    function void checkCollision (Paddle leftPaddle, Paddle rightPaddle) {
+        // code
+    }
+
+    function void Reset () {
+        // code
+    }
+
+    function void dispose() () {
+        do Memory.deAlloc(this);
+    }
+}

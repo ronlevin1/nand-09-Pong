@@ -1,0 +1,60 @@
+class GameManagar{
+    // Responsibilities:
+    // - Track and display scores for both players.
+    // - Reset the ball and paddles when a player scores.
+    field Ball ball;
+    field Paddle leftPaddle;
+    field Paddle rightPaddle;
+    field int leftScore, rightScore;
+
+    //Ctor
+    function GameManagar new () {
+        let leftPaddle = Paddle.new(true);
+        let rightPaddle = Paddle.new(false);
+        let leftScore = 0;
+        let rightScore = 0;
+        let ball = Ball.new(100); // TODO: change velocity
+    }
+
+    function void run () {
+        while (true) {
+            do ball.move();
+            do leftPaddle.update();
+            do rightPaddle.update();
+            do ball.checkCollision(leftPaddle, rightPaddle);
+            do checkScore(ball);
+            do update();
+            //TODO: check win
+        }
+    }
+
+    function void update () {
+        // update screen printing of all object
+    }
+
+    function void checkScore(Ball ball) {
+        if (ball.getX() <= 0) { // Right player scores
+            let rightScore = rightScore + 1;
+            do ball.reset();
+        }
+        if (ball.getX() >= Screen.getWidth()) { // Left player scores
+            let leftScore = leftScore + 1;
+            do ball.reset();
+        }
+        do displayScore();
+    }
+
+    function void displayScore() {
+        do Screen.print("Left: ");
+        do Screen.printInt(leftScore);
+        do Screen.print("  Right: ");
+        do Screen.printInt(rightScore);
+    }
+
+    function void dispose() () {
+        do ball.dispose();
+        do leftPaddle.dispose();
+        do rightPaddle.dispose();
+        do Memory.deAlloc(this);
+    }
+}

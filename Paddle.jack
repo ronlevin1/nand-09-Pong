@@ -1,0 +1,52 @@
+class Paddle{
+    // Responsibilities:
+    // - Manage paddle position and movement.
+    // - Ensure paddle stays within screen bounds.
+    field int x;
+    field int y;
+    // constants
+    field int height;
+    field int width;
+    field int gap;
+    field boolean isLeft;
+
+    //Ctor
+    function void Paddle (boolean isLeft) {
+        // constants
+        let height = 256/3;
+        let width = 10;
+        let gap = 5;
+        // vars
+        let y = (256/2) - (height/2);
+        if (isLeft)  { 
+            x=gap; 
+        }
+        else { 
+            x=512-gap-width; 
+        }
+
+        return this;
+    }
+
+    // move paddle according to KBD arrows press
+    function void update () {
+        // code
+    }
+
+    function int getX () {
+        return x;
+    }
+    function int getY () {
+        return y;
+    }
+    function int getHeight () {
+        return height;
+    }
+    function int getWidth () {
+        return width;
+    }
+
+    function void dispose() () {
+        do Memory.deAlloc(this);
+    }
+}
