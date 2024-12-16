@@ -47,6 +47,36 @@ class Ball{
     method void checkCollision (Paddle leftPaddle, Paddle rightPaddle) {
         return;
         }
+    
+    /**
+    Sets a new vector. The component of the new vector perpendicular to the given normal is equal to this vector's. The component of the new vector parallel to the normal is the negation of this vector's. May be used to simulate semi-elastic collisions if flipping a velocity vector relative to the collision normal.
+    */
+    method void flipVel (int Ax, int Ay) {
+        var int normalX;
+        var int normalY;
+        var int normalMag;
+        var int proj;
+        var int newX;
+        var int newY;
+
+        let normalX = Ax;
+        let normalY = Ay;
+        let normalMag = Math.sqrt((normalX * normalX) + (normalY * normalY));
+        let proj = ((x * normalX) + (y * normalY)) / normalMag;
+        let newX = velX;
+        let newY = velY;
+
+        if (proj < 0) {
+            // if projection is negative, vector opposes normal.
+            // in this case, inverse it along the projection
+            let newX = velX - ((normalX * 2 * proj) / normalMag);
+            let newY = velY - ((normalY * 2 * proj) / normalMag);
+        }
+
+        let velX = newX;
+        let velY = newY;
+        return;
+    }
 
     method void Reset () {
         let x = 512 / 2; // half screen width

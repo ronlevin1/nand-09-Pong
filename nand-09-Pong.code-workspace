@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../projects/09/Average"
+		},
+		{
+			"path": "../../projects/09/BitmapEditor"
+		},
+		{
+			"path": "../../projects/09/Fraction"
+		},
+		{
+			"path": "../../projects/09/HelloWorld"
+		},
+		{
+			"path": "../../projects/09/ImageToJackConverter"
+		},
+		{
+			"path": "../../projects/09/List"
+		},
+		{
+			"path": "../../projects/09/Square"
+		}
+	],
+	"settings": {}
+}

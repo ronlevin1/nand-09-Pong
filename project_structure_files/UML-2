@@ -1,0 +1,56 @@
+Here is a simplified overview of each class, specifying the behaviors they are responsible for, the methods they have, and any interactions with other objects:
+
+### `BouncingBallGameManager`
+- **Responsibilities**: Manages the game initialization, updates, and game end conditions.
+- **Methods**:
+  - `initializeGame(...)`: Initializes the game objects.
+  - `update(float deltaTime)`: Updates the game state.
+  - `checkForGameEnd()`: Checks if the game has ended.
+  - `createBall(...)`: Creates the ball object.
+  - `createUserPaddle(...)`: Creates the user paddle.
+  - `createAIPaddle(...)`: Creates the AI paddle.
+  - `createBorders(...)`: Creates the game borders.
+  - `main(String[] args)`: Entry point of the game.
+
+### `Ball`
+- **Responsibilities**: Represents the ball in the game, handles its collisions.
+- **Methods**:
+  - `Ball(...)`: Constructor.
+  - `onCollisionEnter(GameObject other, Collision collision)`: Handles collision with other objects.
+
+### `UserPaddle`
+- **Responsibilities**: Represents the user-controlled paddle, handles user input.
+- **Methods**:
+  - `UserPaddle(...)`: Constructor.
+  - `update(float deltaTime)`: Updates the paddle's position based on user input.
+
+### `AIPaddle`
+- **Responsibilities**: Represents the AI-controlled paddle, follows the ball.
+- **Methods**:
+  - `AIPaddle(...)`: Constructor.
+  - `update(float deltaTime)`: Updates the paddle's position to follow the ball.
+
+### `GameObject`
+- **Responsibilities**: Base class for all game objects, handles rendering, updating, and collisions.
+- **Methods**:
+  - `GameObject(...)`: Constructor.
+  - `update(float deltaTime)`: Updates the game object.
+  - `render(Graphics2D g)`: Renders the game object.
+  - `render(Graphics2D g, Camera camera)`: Renders the game object with a camera.
+  - `shouldCollideWith(GameObject other)`: Determines if the object should collide with another object.
+  - `onCollisionEnter(GameObject other, Collision collision)`: Handles collision start.
+  - `onCollisionStay(GameObject other, Collision collision)`: Handles ongoing collision.
+  - `onCollisionExit(GameObject other)`: Handles collision end.
+  - `getCenter()`, `setCenter(Vector2 center)`: Gets/Sets the center position.
+  - `getTopLeftCorner()`, `setTopLeftCorner(Vector2 topLeftCorner)`: Gets/Sets the top-left corner.
+  - `getVelocity()`, `setVelocity(Vector2 velocity)`: Gets/Sets the velocity.
+  - `getDimensions()`, `setDimensions(Vector2 dimensions)`: Gets/Sets the dimensions.
+  - `getTag()`, `setTag(String tag)`: Gets/Sets the tag.
+  - `addComponent(Component component)`, `removeComponent(Component component)`: Adds/Removes a component.
+  - `renderer()`: Accesses the renderer component.
+  - `transform()`: Accesses the transform component.
+  - `getCoordinateSpace()`, `setCoordinateSpace(CoordinateSpace coordinateSpace)`: Gets/Sets the coordinate space.
+  - `worldToObjectCoords(Vector2 worldCoords)`, `objectToWorldCoords(Vector2 objectCoords)`: Coordinate transformations.
+  - `containsPoint(Vector2 point)`: Checks if the object contains a point.
+  - `onMouseAction(MouseActionParams params)`: Handles mouse actions.
+  - `physics()`: Accesses the physics component.

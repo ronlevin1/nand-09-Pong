@@ -1,0 +1,86 @@
++-----------------------------+
+|        GameManager          |
+|-----------------------------|
+| - windowTitle: String       |
+| - windowDimensions: Vector2 |
+| - windowController: WindowController |
+|-----------------------------|
+| + initializeGame(...)       |
+| + update(deltaTime: float)  |
+| + main(args: String[])      |
++-----------------------------+
+              ^
+              |
++-----------------------------+
+| BouncingBallGameManager     |
+|-----------------------------|
+| - ball: Ball                |
+| - windowDimensions: Vector2 |
+| - windowController: WindowController |
+|-----------------------------|
+| + initializeGame(...)       |
+| + update(deltaTime: float)  |
+| + checkForGameEnd()         |
+| + createBall(...)           |
+| + createUserPaddle(...)     |
+| + createAIPaddle(...)       |
+| + createBorders(...)        |
++-----------------------------+
+              |
+              |
++-----------------------------+
+|         GameObject          |
+|-----------------------------|
+| - renderer: RendererComponent|
+| - transform: Transform      |
+| - physics: GameObjectPhysics|
+| - coordinateSpace: CoordinateSpace |
+| - tag: String               |
+| - components: ModifiableList<Component> |
+|-----------------------------|
+| + update(deltaTime: float)  |
+| + render(g: Graphics2D)     |
+| + render(g: Graphics2D, camera: Camera) |
+| + shouldCollideWith(other: GameObject): boolean |
+| + onCollisionEnter(other: GameObject, collision: Collision) |
+| + onCollisionStay(other: GameObject, collision: Collision) |
+| + onCollisionExit(other: GameObject) |
+| + getCenter(): Vector2      |
+| + setCenter(center: Vector2)|
+| + getTopLeftCorner(): Vector2 |
+| + setTopLeftCorner(topLeftCorner: Vector2) |
+| + getVelocity(): Vector2    |
+| + setVelocity(velocity: Vector2) |
+| + getDimensions(): Vector2  |
+| + setDimensions(dimensions: Vector2) |
+| + getTag(): String          |
+| + setTag(tag: String)       |
+| + addComponent(component: Component) |
+| + removeComponent(component: Component) |
+| + renderer(): RendererComponent |
+| + transform(): Transform    |
+| + getCoordinateSpace(): CoordinateSpace |
+| + setCoordinateSpace(coordinateSpace: CoordinateSpace) |
+| + worldToObjectCoords(worldCoords: Vector2): Vector2 |
+| + objectToWorldCoords(objectCoords: Vector2): Vector2 |
+| + containsPoint(point: Vector2): boolean |
+| + onMouseAction(params: MouseActionParams) |
+| + physics(): GameObjectPhysics |
++-----------------------------+
+              ^
+              |
++-----------------------------+    +-----------------------------+
+|            Ball             |    |         UserPaddle          |
+|-----------------------------|    |-----------------------------|
+| - collisionSound: Sound     |    | - inputListener: UserInputListener |
+|-----------------------------|    |-----------------------------|
+| + onCollisionEnter(...)     |    | + update(deltaTime: float)  |
++-----------------------------+    +-----------------------------+
+              |
++-----------------------------+
+|          AIPaddle           |
+|-----------------------------|
+| - ball: Ball                |
+|-----------------------------|
+| + update(deltaTime: float)  |
++-----------------------------+
