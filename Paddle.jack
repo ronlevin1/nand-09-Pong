@@ -15,7 +15,7 @@ class Paddle{
         // constants
         let height = 256/3;
         let width = 10;
-        let gap = 5;
+        let gap = 25;
 
         // vars
         let y = (256/2) - (height/2);

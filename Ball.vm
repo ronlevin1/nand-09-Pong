@@ -20,7 +20,7 @@ push constant 0
 pop this 4
 push pointer 0
 return
-function Ball.isPosLegal 6
+function Ball.isPosLegal 8
 push argument 0
 pop pointer 0
 push this 0
@@ -40,20 +40,12 @@ push this 2
 add
 pop local 3
 push local 1
-push constant 0
+push constant 1
 gt
 push local 1
-or
-push constant 0
+push constant 1
 eq
-push local 0
 or
-push constant 511
-eq
-push local 0
-or
-push constant 511
-lt
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
@@ -65,45 +57,77 @@ label IF_FALSE0
 push constant 0
 pop local 4
 label IF_END0
-push local 2
-push constant 16
-gt
-push local 2
-or
-push constant 16
+push local 0
+push constant 510
 eq
-push local 3
-or
-push constant 250
+push local 0
+push constant 510
 lt
-push local 3
 or
-push constant 250
-eq
 if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
 push constant 0
 not
-pop local 5
+pop local 6
 goto IF_END1
 label IF_FALSE1
 push constant 0
-pop local 5
+pop local 6
 label IF_END1
-push local 4
-push local 5
+push local 2
+push constant 16
+gt
+push local 2
+push constant 16
+eq
 or
 if-goto IF_TRUE2
 goto IF_FALSE2
 label IF_TRUE2
 push constant 0
 not
-return
+pop local 5
 goto IF_END2
 label IF_FALSE2
 push constant 0
-push constant 30
+pop local 5
+label IF_END2
+push local 3
+push constant 250
+lt
+push local 3
+push constant 250
+eq
+or
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 0
+not
+pop local 7
+goto IF_END3
+label IF_FALSE3
+push constant 0
+pop local 7
+label IF_END3
+push local 4
+push local 6
+and
+push local 5
+and
+push local 7
+and
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push constant 0
+not
+return
+goto IF_END4
+label IF_FALSE4
+push constant 0
+push constant 20
 call Output.moveCursor 2
 pop temp 0
 push constant 2
@@ -143,17 +167,24 @@ pop temp 0
 push this 2
 call Output.printInt 1
 pop temp 0
+push constant 4
+call String.new 1
+push constant 32
+call String.appendChar 2
+push constant 98
+call String.appendChar 2
+push constant 97
+call String.appendChar 2
+push constant 100
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
 push constant 0
 return
-label IF_END2
+label IF_END4
 function Ball.draw 0
 push argument 0
 pop pointer 0
-push pointer 0
-call Ball.isPosLegal 1
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
 push constant 0
 not
 call Screen.setColor 1
@@ -163,17 +194,11 @@ push this 1
 push this 2
 call Screen.drawCircle 3
 pop temp 0
-label IF_FALSE0
 push constant 0
 return
 function Ball.erase 0
 push argument 0
 pop pointer 0
-push pointer 0
-call Ball.isPosLegal 1
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
 push constant 0
 call Screen.setColor 1
 pop temp 0
@@ -182,7 +207,6 @@ push this 1
 push this 2
 call Screen.drawCircle 3
 pop temp 0
-label IF_FALSE0
 push constant 0
 return
 function Ball.move 0
@@ -190,7 +214,14 @@ push argument 0
 pop pointer 0
 push pointer 0
 call Ball.isPosLegal 1
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+call Ball.flipVelX 1
 pop temp 0
+label IF_FALSE0
 push pointer 0
 call Ball.erase 1
 pop temp 0
@@ -207,7 +238,7 @@ call Ball.draw 1
 pop temp 0
 push constant 0
 return
-function Ball.checkCollision 10
+function Ball.checkOverlap 8
 push argument 0
 pop pointer 0
 push this 0
@@ -226,13 +257,13 @@ push this 1
 push this 2
 add
 pop local 3
-push local 0
-push argument 2
+push local 1
+push argument 1
 call Paddle.getX 1
 gt
-push local 0
+push local 1
 or
-push argument 2
+push argument 1
 call Paddle.getX 1
 eq
 if-goto IF_TRUE0
@@ -240,47 +271,42 @@ goto IF_FALSE0
 label IF_TRUE0
 push constant 0
 not
-pop local 4
+pop local 5
 goto IF_END0
 label IF_FALSE0
 push constant 0
-pop local 4
+pop local 5
 label IF_END0
-push local 2
-push argument 2
-call Paddle.getY 1
-gt
-push local 2
+push local 0
+push argument 1
+call Paddle.getX 1
+lt
+push argument 1
+call Paddle.getWidth 1
+add
+push local 0
 or
-push argument 2
-call Paddle.getY 1
+push argument 1
+call Paddle.getX 1
 eq
+push argument 1
+call Paddle.getWidth 1
+add
 if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
 push constant 0
 not
-pop local 5
+pop local 4
 goto IF_END1
 label IF_FALSE1
 push constant 0
-pop local 5
+pop local 4
 label IF_END1
 push local 3
-push argument 2
+push argument 1
 call Paddle.getY 1
-push argument 2
-call Paddle.getHeight 1
-add
-lt
-push local 3
-or
-push argument 2
-call Paddle.getY 1
-push argument 2
-call Paddle.getHeight 1
-add
-eq
+gt
 if-goto IF_TRUE2
 goto IF_FALSE2
 label IF_TRUE2
@@ -292,107 +318,42 @@ label IF_FALSE2
 push constant 0
 pop local 6
 label IF_END2
-push local 4
-push local 5
-and
-push local 6
-and
+push local 2
+push argument 1
+call Paddle.getY 1
+lt
+push argument 1
+call Paddle.getHeight 1
+add
 if-goto IF_TRUE3
 goto IF_FALSE3
 label IF_TRUE3
-push constant 2
-return
+push constant 0
+not
+pop local 7
+goto IF_END3
 label IF_FALSE3
-push local 1
-push argument 1
-call Paddle.getX 1
-eq
-push local 1
-or
-push argument 1
-call Paddle.getX 1
-lt
-push argument 1
-call Paddle.getWidth 1
-add
-push local 1
-or
-push argument 1
-call Paddle.getX 1
-eq
-push argument 1
-call Paddle.getWidth 1
-add
+push constant 0
+pop local 7
+label IF_END3
+push local 4
+push local 5
+and
+push local 7
+and
+push local 6
+and
 if-goto IF_TRUE4
 goto IF_FALSE4
 label IF_TRUE4
 push constant 0
 not
-pop local 7
+return
 goto IF_END4
 label IF_FALSE4
 push constant 0
-pop local 7
+return
 label IF_END4
-push local 2
-push argument 1
-call Paddle.getY 1
-gt
-push local 2
-or
-push argument 1
-call Paddle.getY 1
-eq
-if-goto IF_TRUE5
-goto IF_FALSE5
-label IF_TRUE5
-push constant 0
-not
-pop local 8
-goto IF_END5
-label IF_FALSE5
-push constant 0
-pop local 8
-label IF_END5
-push local 3
-push argument 1
-call Paddle.getY 1
-push argument 1
-call Paddle.getHeight 1
-add
-lt
-push local 3
-or
-push argument 1
-call Paddle.getY 1
-push argument 1
-call Paddle.getHeight 1
-add
-eq
-if-goto IF_TRUE6
-goto IF_FALSE6
-label IF_TRUE6
-push constant 0
-not
-pop local 9
-goto IF_END6
-label IF_FALSE6
-push constant 0
-pop local 9
-label IF_END6
-push local 7
-push local 8
-and
-push local 9
-and
-if-goto IF_TRUE7
-goto IF_FALSE7
-label IF_TRUE7
-push constant 1
-return
-label IF_FALSE7
-push constant 0
-return
 function Ball.flipVelX 0
 push argument 0
 pop pointer 0

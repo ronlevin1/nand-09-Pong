@@ -27,29 +27,16 @@ class GameManagar{
         var char key;  // the key currently pressed by the user
         var boolean exit;
         let exit = false;
-        do displayScore(); // todo
+        do displayScore();
 
         while (~exit) {
-            //todo: move ball here
-            if((ball.checkCollision(leftPaddle, rightPaddle))=0){
-                do ball.move();
-            }
-            else{
-                do ball.flipVelX();
-                do ball.move();
-            }
+            do moveBall();
             // waits for a key to be pressed
             while (key = 0) {
                 let rightDirection = 0;
                 let leftDirection = 0;
                 let key = Keyboard.keyPressed();
-                if((ball.checkCollision(leftPaddle, rightPaddle))=0){
-                    do ball.move();
-                }
-                else{
-                    do ball.flipVelX();
-                    do ball.move();
-                }
+                do moveBall();
                 do movePaddles();
             } 
             if (key = 81)  { let exit = true; }     // q key
@@ -63,31 +50,33 @@ class GameManagar{
             // waits for the key to be released
             while (~(key = 0)) {
                 let key = Keyboard.keyPressed();
-                if((ball.checkCollision(leftPaddle, rightPaddle))=0){
-                    do ball.move();
-                }
-                else{
-                    do ball.flipVelX();
-                    do ball.move();
-                }
+                do moveBall();
                 do movePaddles();
             }
-            // todo: check score here
-            do checkScore();
+            do movePaddles();
         } // while
+        return;
+    }
+
+    method void moveBall(){
+        if((ball.checkOverlap(leftPaddle))){
+            do ball.flipVelX();
+        }
+        if((ball.checkOverlap(rightPaddle))){
+            do ball.flipVelX();
+        }
+        do ball.move();
+        //TODO: check if ball is behind paddle -> score!
+        do checkScore();
         return;
     }
 
     method void movePaddles(){
         // left
         if (leftDirection = 1) { 
-            // do Output.moveCursor(19, 0);
-            // do Output.printString("In L moveUp()");
             do leftPaddle.moveUp(); 
         }
         if (leftDirection = 2) { 
-            // do Output.moveCursor(20, 0);
-            // do Output.printString("In L move()");
             do leftPaddle.moveDown(); 
         }
         // right
@@ -97,80 +86,28 @@ class GameManagar{
         do Sys.wait(5);  // delays the next movement
         return;
     }
-
-    // method void update () {
-    //     //update all objects and look for collisions.
-    //     // for(GameObject obj : gameObjects)
-    //     //     obj.update(deltaTime);
-    //     // if(camera != null)
-    //     //     camera.update(deltaTime);
-    //     // gameObjects.update(deltaTime);
-    //     // gameObjects.handleCollisions();
-
-    //     do checkScore();
-    //     return;
-    // }
-
+    
+    //todo
     method void checkScore() {
-        if (ball.getX() < 0 | ball.getX() = 0) { // Right player scores
+        var int leftLim, rightLim;
+        var boolean flag;
+        let leftLim = leftPaddle.getX();
+        let rightLim = rightPaddle.getX() + rightPaddle.getWidth();
+        //
+        if (ball.getX() < leftLim) { // Right player scores
             let rightScore = rightScore + 1;
-            do ball.reset();
+            let flag = true;
         }
-        if (ball.getX() > 512 | ball.getX() = 512) { // Left player scores
+        if (ball.getX() > rightLim) { // Left player scores
             let leftScore = leftScore + 1;
+            let flag = true;
+        }
+        if (flag) {
+            do displayScore();
+            do Sys.wait(150);  // delays the next movement
+            do ball.erase();
             do ball.reset();
         }
-        do displayScore();
-        return;
-    }
-
-    //TODO: fix - msg is not displayed with numbers
-    method void resetScoreMsg(){
-        // push score field into vars
-        var String l; 
-        var String r;
-        // do l.setInt(leftScore);
-        // do r.setInt(rightScore);
-
-        // update score message
-        do scoreMsg.setCharAt(0,"L");
-        do scoreMsg.setCharAt(1,"e");
-        do scoreMsg.setCharAt(2,"f");
-        do scoreMsg.setCharAt(3,"t");
-        do scoreMsg.setCharAt(4," ");
-        do scoreMsg.setCharAt(5,digitToString(leftScore)); // leftScore
-        do scoreMsg.setCharAt(6," ");
-        do scoreMsg.setCharAt(7,":");
-        do scoreMsg.setCharAt(8," ");
-        do scoreMsg.setCharAt(9,digitToString(rightScore)); // rightScore
-        do scoreMsg.setCharAt(10," ");
-        do scoreMsg.setCharAt(11,"R");
-        do scoreMsg.setCharAt(12,"i");
-        do scoreMsg.setCharAt(13,"g");
-        do scoreMsg.setCharAt(14,"h");
-        do scoreMsg.setCharAt(15,"t");
-        do scoreMsg.setCharAt(16,"");
-        do scoreMsg.setCharAt(17,"");
-        do scoreMsg.setCharAt(18,"");
-        do scoreMsg.setCharAt(19,"");
-
-        // let newScoreMsg = "Left ";
-        // do newScoreMsg.appendChar(leftScore);
-        // do newScoreMsg.appendChar(" ");
-        // do newScoreMsg.appendChar(":");
-        // do newScoreMsg.appendChar(" ");
-        // do newScoreMsg.appendChar(rightScore);
-        // do newScoreMsg.appendChar(" ");
-        // do newScoreMsg.appendChar("R");
-        // do newScoreMsg.appendChar("i");
-        // do newScoreMsg.appendChar("g");
-        // do newScoreMsg.appendChar("h");
-        // do newScoreMsg.appendChar("t");
-        // do newScoreMsg.setCharAt(5, 7);
-        // do newScoreMsg.setCharAt(9, 4);
-        // do newScoreMsg.setCharAt(5, leftScore);
-        // do newScoreMsg.setCharAt(9, rightScore);
-
         return;
     }
 
@@ -191,7 +128,6 @@ class GameManagar{
         do Screen.drawLine(0, 254, 511, 254);
         do Screen.drawLine(0, 253, 511, 253);
 
-        do resetScoreMsg();
         do Output.moveCursor(0, 0);
         // do Output.printString(scoreMsg);
         do Output.printString("Left ");
