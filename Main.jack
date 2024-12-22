@@ -15,8 +15,11 @@ class Main {
   // - Run the game loop: handle player input, update the ball and paddle positions, check collisions, and update the display.
   
   function void main() {
-    // Your code goes here!
-    return;
+      var GameManagar game;
+      let game = GameManagar.new();
+      do game.run();
+      do game.dispose();
+      return;
   }
 
   // Your code goes here!

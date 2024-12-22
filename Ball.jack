@@ -13,83 +13,221 @@ class Ball{
     field int velY;
 
     // Ctor
-    constructor void Ball new(int velocity) {
+    constructor Ball new(int velocity) {
         let x = 512 / 2; // half screen width
-        let y = 256 / 2; // half screen height
-        let r = 10;
+        let y = (256 / 2) + 16; // half screen height
+        let r = 5;
 
         let velX = velocity; // Initial horizontal direction
-        let velY = velocity; // Initial vertical direction
+        let velY = 0; // TODO
         return this;
     }
-    method void update () {
-        // code
-        return;
-    }
 
+    method boolean isPosLegal(){
+        var int xr, xl, yt, yb;
+        var boolean xInRange, yInRange;
+        let xr = x+r;
+        let xl=x-r;
+        let yt=y-r;
+        let yb=y+r;
+        if((xl > 0 | xl = 0 | xr = 511 | xr < 511)){
+            let xInRange=true;
+        }
+        else{
+            let xInRange=false;
+        }
+        if((yt >16 | yt=16 | yb<250 | yb =250)){
+            let yInRange = true;
+        }
+        else{
+            let yInRange=false;
+        }
+        if((xInRange) | (yInRange))
+        {
+            // do Output.moveCursor(0,20);
+            // do Output.printString("x:");
+            // do Output.printInt(x);
+            // do Output.printString(" y:");
+            // do Output.printInt(y);
+            // do Output.printString(" r:");
+            // do Output.printInt(r);
+            // do Output.printString(" OK");
+            return true;
+        }
+        else
+        {
+            do Output.moveCursor(0,30);
+            do Output.printString("x:");
+            do Output.printInt(x);
+            do Output.printString(" y:");
+            do Output.printInt(y);
+            do Output.printString(" r:");
+            do Output.printInt(r);
+            return false;
+        }
+    }
     method void draw() {
-        do Screen.setColor(true);
-        do Screen.drawCircle(x, y, r);
+        // if((x-r > 0 | x-r = 0 | x+r = 511 | x+r < 511) & (y-r >16 | y-r=16 | y+r<250 | y+r =250))
+        if(isPosLegal())
+        {
+            // do Output.moveCursor(10,10);
+            // do Output.printString("in draw ");
+            do Screen.setColor(true);
+            do Screen.drawCircle(x, y, r);
+        }
+        // do Output.moveCursor(10,10);
+        // do Output.printString("out draw");
         return;
     }
 
     method void erase() {
-        do Screen.setColor(false);
-        do Screen.drawCircle(x, y, r);
-        return;
-    }
-
-    method void move (/** arguments */) {
-        // check wall collisions here
-        return;
-    }
-
-    method void checkCollision (Paddle leftPaddle, Paddle rightPaddle) {
-        return;
+        // if((x-r > 0 | x-r = 0 | x+r = 511 | x+r < 511) & (y-r >16 | y-r=16 | y+r<250 | y+r =250))
+        if(isPosLegal())
+        {
+            // do Output.moveCursor(10,20);
+            // do Output.printString("in erase ");
+            do Screen.setColor(false);
+            do Screen.drawCircle(x, y, r);
         }
-    
+        // do Output.moveCursor(10,20);
+        // do Output.printString("out erase");
+        return;
+    }
+
+    method void move () {
+        do isPosLegal();
+        // erase cur loc
+        do erase();
+        // update ball loc with vel
+        let x = x + velX;
+        let y = y + velY;
+        // draw ball again
+        do draw();
+        // check collisions with paddles
+
+        // TODO: check wall collisions here
+        return;
+    }
     /**
-    Sets a new vector. The component of the new vector perpendicular to the given normal is equal to this vector's. The component of the new vector parallel to the normal is the negation of this vector's. May be used to simulate semi-elastic collisions if flipping a velocity vector relative to the collision normal.
+    return: 0 for no collision; 1 for collision with left, 2 for collision with right.
     */
-    method void flipVel (int Ax, int Ay) {
-        var int normalX;
-        var int normalY;
-        var int normalMag;
-        var int proj;
-        var int newX;
-        var int newY;
-
-        let normalX = Ax;
-        let normalY = Ay;
-        let normalMag = Math.sqrt((normalX * normalX) + (normalY * normalY));
-        let proj = ((x * normalX) + (y * normalY)) / normalMag;
-        let newX = velX;
-        let newY = velY;
-
-        if (proj < 0) {
-            // if projection is negative, vector opposes normal.
-            // in this case, inverse it along the projection
-            let newX = velX - ((normalX * 2 * proj) / normalMag);
-            let newY = velY - ((normalY * 2 * proj) / normalMag);
+    method int checkCollision (Paddle leftPaddle, Paddle rightPaddle) {
+        var int xr, xl, yt, yb;
+        // w/ right
+        var boolean isBehindR;
+        var boolean isAboveRightTop;
+        var boolean isBelowRightBottom;
+        // 
+        var boolean isBehindL;
+        var boolean isAboveLeftTop;
+        var boolean isBelowLeftBottom;
+        let xr = x+r;
+        let xl=x-r;
+        let yt=y-r;
+        let yb=y+r;
+        // assign
+        if (xr > rightPaddle.getX() | xr = rightPaddle.getX()) {
+            let isBehindR = true;
+        } else {
+            let isBehindR = false;
         }
+        if (yt > rightPaddle.getY() | yt = rightPaddle.getY()) {
+            let isAboveRightTop = true;
+        } else {
+            let isAboveRightTop = false;
+        }
+        if (yb < (rightPaddle.getY() + rightPaddle.getHeight()) | yb = (rightPaddle.getY() + rightPaddle.getHeight())) {
+            let isBelowRightBottom = true;
+        } else {
+            let isBelowRightBottom = false;
+        }
+        // check
+        if ((isBehindR) & (isAboveRightTop) & (isBelowRightBottom)) {
+            return 2;
+        }
+        // w/ left
+        // assign
+        if (xl = leftPaddle.getX() | xl < leftPaddle.getX() + leftPaddle.getWidth() | xl = leftPaddle.getX() + leftPaddle.getWidth()) {
+            let isBehindL = true;
+        } else {
+            let isBehindL = false;
+        }
+        if (yt > leftPaddle.getY() | yt = leftPaddle.getY()) {
+            let isAboveLeftTop = true;
+        } else {
+            let isAboveLeftTop = false;
+        }
+        if (yb < (leftPaddle.getY() + leftPaddle.getHeight()) | yb = (leftPaddle.getY() + leftPaddle.getHeight())) {
+            let isBelowLeftBottom = true;
+        } else {
+            let isBelowLeftBottom = false;
+        }
+        // check
+        if ((isBehindL) & (isAboveLeftTop) & (isBelowLeftBottom)) {
+            return 1;
+        }
+        // no collision at all
+        return 0;
+    }
 
-        let velX = newX;
-        let velY = newY;
+    method void flipVelX (){
+        do Output.moveCursor(10,10);
+        do Output.printString("in flip ");
+        let velX = velX*(-1);
         return;
     }
 
-    method void Reset () {
+    method void reset () {
         let x = 512 / 2; // half screen width
-        let y = 256 / 2; // half screen height
+        let y = (256 / 2) + 16; // half screen height
         // let r = 10;
 
         let velX = -velX; // opposite horizontal direction
         let velY = velY; // Initial vertical direction
-        return this;
+        //todo: draw?
+        return;
     }
 
-    method void dispose() () {
+    method void dispose() {
         do Memory.deAlloc(this);
         return;
     }
+
+    method int getX(){
+        return x;
+    }
+
+    method int getY(){
+        return y;
+    }
+
+    /**
+    Sets a new vector. The component of the new vector perpendicular to the given normal is equal to this vector's. The component of the new vector parallel to the normal is the negation of this vector's. May be used to simulate semi-elastic collisions if flipping a velocity vector relative to the collision normal.
+    */
+    // method void flipVel (int Ax, int Ay) {
+    //     var int normalX;
+    //     var int normalY;
+    //     var int normalMag;
+    //     var int proj;
+    //     var int newX;
+    //     var int newY;
+
+    //     let normalX = Ax;
+    //     let normalY = Ay;
+    //     let normalMag = Math.sqrt((normalX * normalX) + (normalY * normalY));
+    //     let proj = ((x * normalX) + (y * normalY)) / normalMag;
+    //     let newX = velX;
+    //     let newY = velY;
+
+    //     if (proj < 0) {
+    //         // if projection is negative, vector opposes normal.
+    //         // in this case, inverse it along the projection
+    //         let newX = velX - ((normalX * 2 * proj) / normalMag);
+    //         let newY = velY - ((normalY * 2 * proj) / normalMag);
+    //     }
+
+    //     let velX = newX;
+    //     let velY = newY;
+    //     return;
+    // }
 }
