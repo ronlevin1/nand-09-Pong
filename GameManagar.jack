@@ -7,6 +7,10 @@ class GameManagar{
     // field String leftStr, rightStr;
     field int rightDirection, leftDirection;// the paddle's current direction: 
     // 0=none, 1=up, 2=down
+    // user input params
+    field int velocity;
+    field int numOfRounds;
+    field boolean exit;
 
     //Ctor
     constructor GameManagar new () {
@@ -17,17 +21,18 @@ class GameManagar{
         let scoreMsg = "                    "; // todo
         let rightDirection = 0;
         let leftDirection = 0;
-
-        let ball = Ball.new(1);
+        let exit = false;
         return this;
     }
 
     /** Runs the game: handles the user's inputs and moves the square accordingly */
     method void run() {
         var char key;  // the key currently pressed by the user
-        var boolean exit;
-        let exit = false;
+        // var boolean exit;
+        // let exit = false;
         do displayScore();
+        do leftPaddle.draw();
+        do rightPaddle.draw();
 
         while (~exit) {
             do moveBall();
@@ -72,7 +77,7 @@ class GameManagar{
             do ball.draw();
             do ball.flipVelX();
         }
-        // todo: delete
+        // uncomment for de-bugging.
         if(flag){
             // do Output.moveCursor(15,15);
             // do Output.printString("overlapping");
@@ -83,7 +88,6 @@ class GameManagar{
         }
         
         do ball.move();
-        //TODO: check if ball is behind paddle -> score!
         do checkScore();
         return;
     }
@@ -95,17 +99,20 @@ class GameManagar{
         // ball (x, y) and paddle (p) borders
         var int xr, xl, yt, yb;
         var int pr, pl, pt, pb;
-        // paddle booleans
+
+        // overlap booleans
         // var boolean isInXR;
         // var boolean isInXL;
         var boolean isInX;
         var boolean isInYT;
         var boolean isInYB;
+
         // ball borders
         let xr = ball.getX()+ball.getR();
         let xl= ball.getX()-ball.getR();
         let yt= ball.getY()-ball.getR();
         let yb= ball.getY()+ball.getR();
+
         // paddle borders
         let pl = paddle.getX();
         let pr = paddle.getX()+paddle.getWidth();
@@ -133,21 +140,15 @@ class GameManagar{
             else {let isInX = false;}
         }
         //
-        // if (xl > pl | xl = pl) { let isInXL = true; }
-        // else {let isInXL = false;}
-
-        // if (xr < pr | xr = pr) { let isInXR = true; }
-        // else {let isInXR = false;}
-
-        //TOO: bug here maybe. no score update when paddle is ABOVE ball.
         if ((yt > pt) | (yt = pt)) { let isInYT=true; }
         else { let isInYT=false; }
         
         if ((yb < pb) | (yb = pb))  { let isInYB=true; }
         else { let isInYB=false; }
-        // print
+        // for debugging: print
         // do printOverlap(isInXL, isInXR, isInYT, isInYB);
-        // check
+
+        // check overall
         if (isInX & isInYB & isInYT)  { return true; }
         // if (isInXR & isInXL & isInYB & isInYT)  { return true; }
         else { return false;}
@@ -157,9 +158,12 @@ class GameManagar{
         var int leftLim, rightLim;
         var boolean flag;
         var int gap;
+        var String msg1;
+        //
         let gap = 15;
         let leftLim = leftPaddle.getX() - gap;
         let rightLim = rightPaddle.getX() + rightPaddle.getWidth() + gap;
+        let msg1 = "GOAL!";
         //
         if (ball.getX() < leftLim) { // Right player scores
             let rightScore = rightScore + 1;
@@ -171,10 +175,21 @@ class GameManagar{
         }
         if (flag) {
             do displayScore();
-            do Sys.wait(4000);  // delays the next movement
+            // print GOAL and erase afterwards
+            do Output.moveCursor(11,25);
+            do Output.printString(msg1);
+            do Sys.wait(2000);  // delays the next movement
+            let msg1 = "                  ";
+            do Output.moveCursor(11,31);
+            do Output.printString(msg1);
             do ball.erase();
             do ball.reset();
         }
+        // check game end
+        if(rightScore + leftScore = numOfRounds){
+            do end();
+        }
+        do msg1.dispose();
         return;
     }
 
@@ -202,7 +217,7 @@ class GameManagar{
     }
 
     method void displayScore() {
-        // NOTE: Y dims of game field are: 16 < Ydims < 250
+        // NOTE: Y dims of game field are 16 to 250
         var int y;
         let y = 13;
         do Screen.drawLine(0, y, 511, y);
@@ -218,6 +233,84 @@ class GameManagar{
         do Output.printString(" : ");
         do Output.printString(digitToString(rightScore));
         do Output.printString(" Right");
+        return;
+    }
+
+    /**
+    setup game env
+    */
+    method void setup(){
+        // read input #rounds
+        // read input difficulty level -> ball velocity [1,2,3]
+        // clear screen (game printing is done in run() method)
+        var String msg1, msg2, msg3;
+        var int rounds, vel;
+        let msg1 = "Enter number of rounds: ";
+        let msg2 = "Enter difficulty level (1-3): ";
+        let msg3 = "OK, got it.";
+        //
+        do Screen.clearScreen();
+        // handle rounds input and make sure it is between 1 and 9
+        let rounds = Keyboard.readInt(msg1);
+        let rounds = Math.min(rounds, 9);
+        let rounds = Math.max(rounds, 1);
+        // hangl vel input: read and make sure vel is between 1 and 3
+        let vel = Keyboard.readInt(msg2);
+        let vel = Math.min(vel, 3);
+        let vel = Math.max(vel, 1);
+        // set class fields
+        let numOfRounds = rounds;
+        let ball = Ball.new(vel); // todo: change by input val
+        // "OK, got it.""
+        do Output.printString(msg3);
+        //
+        do Sys.wait(2000);
+        do Screen.clearScreen();
+        do msg1.dispose(); 
+        do msg2.dispose();
+        do msg3.dispose();
+        return;
+    }
+
+    /**
+    end game and sum results
+    */
+    method void end(){
+        var String msg1,msg2,msg3;
+        let msg1 = "Game Finished!";
+        let msg2 = "Final Score: ";
+
+        do Screen.clearScreen();
+        do Output.moveCursor(11,23);
+        do Output.printString(msg1);
+        do Output.println();
+
+        do Output.moveCursor(14,20);
+        do Output.printString(msg2);
+        do Output.printInt(leftScore);
+        do Output.printString(" - ");
+        do Output.printInt(rightScore);
+        do Output.println();
+        // check winner
+        if (leftScore > rightScore) {
+            let msg3 = "NO! Left player wins !!!";
+        }
+        else{
+            if (leftScore < rightScore) {
+                let msg3 = "Aaaa Right player wins ..!!!";
+            }
+            else{
+                let msg3 = "Its a Tie !!!!!!";
+            }
+        }
+        do Output.moveCursor(17,20);
+        do Output.printString(msg3);
+        do Sys.wait(5000);
+        do msg1.dispose();
+        do msg2.dispose();
+        do msg3.dispose();
+        do Screen.clearScreen();
+        let exit = true; // set class exit flag
         return;
     }
 

@@ -17,8 +17,10 @@ class Main {
   function void main() {
       var GameManagar game;
       let game = GameManagar.new();
-      do game.run();
+      do game.setup();
+      do game.run(); // end() is called inside run()
       do game.dispose();
+      do Screen.clearScreen();
       return;
   }
 
