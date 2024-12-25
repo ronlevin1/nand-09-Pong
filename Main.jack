@@ -24,3 +24,7 @@ class Main {
 
   // Your code goes here!
 }
+// cd to nand-09-Pong (= project dir)
+// compile with: /Users/ronlevin/Desktop/nand2tetris/tools/JackCompiler.sh
+// open VMEmulator
+// run project dir with it and run.

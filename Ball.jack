@@ -26,6 +26,7 @@ class Ball{
     method boolean isPosLegal(){
         var int xr, xl, yt, yb;
         var boolean xInRangeL, yInRangeT, xInRangeR, yInRangeB;
+        // ball borders
         let xr = x+r;
         let xl=x-r;
         let yt=y-r;
@@ -58,14 +59,14 @@ class Ball{
             // do Output.printString(" good");
             return true;
         } else {
-            do Output.moveCursor(0, 20);
-            do Output.printString("x:");
-            do Output.printInt(x);
-            do Output.printString(" y:");
-            do Output.printInt(y);
-            do Output.printString(" r:");
-            do Output.printInt(r);
-            do Output.printString(" bad");
+            // do Output.moveCursor(0, 20);
+            // do Output.printString("x:");
+            // do Output.printInt(x);
+            // do Output.printString(" y:");
+            // do Output.printInt(y);
+            // do Output.printString(" r:");
+            // do Output.printInt(r);
+            // do Output.printString(" bad");
             return false;
         }
     }
@@ -97,38 +98,100 @@ class Ball{
         return;
     }
 
-    method boolean checkOverlap(Paddle paddle) {
-        // collision: if ball y between paddle top and bottom        
-        //      and x in paddle width
-        // ball borders
-        var int xr, xl, yt, yb;
-        // paddle booleans
-        var boolean isInXR;
-        var boolean isInXL;
-        var boolean isInYT;
-        var boolean isInYB;
-        //
-        let xr = x+r;
-        let xl=x-r;
-        let yt=y-r;
-        let yb=y+r;
-        //
-        if (xl > paddle.getX() | xl = paddle.getX())
-        { let isInXL = true; }
-        else{let isInXL = false;}
+    // /**
+    // returns: true if ball overlapping paddle; false otherwise. 
+    // */
+    // method boolean checkOverlap(Paddle paddle) {
+    //     // ball (x, y) and paddle (p) borders
+    //     var int xr, xl, yt, yb;
+    //     var int pr, pl, pt, pb;
+    //     // paddle booleans
+    //     // var boolean isInXR;
+    //     // var boolean isInXL;
+    //     var boolean isInX;
+    //     var boolean isInYT;
+    //     var boolean isInYB;
+    //     //
+    //     let xr = x+r;
+    //     let xl=x-r;
+    //     let yt=y-r;
+    //     let yb=y+r;
+    //     //
+    //     let pl = paddle.getX();
+    //     let pr = paddle.getX()+paddle.getWidth();
+    //     let pt = paddle.getY();
+    //     let pb = paddle.getY()+paddle.getHeight();
+    //     //
+    //     if (paddle.getIsLeft()) {
+    //         do Output.moveCursor(20,0);
+    //         do Output.printString("Left-");
+    //         do Output.printInt(xl);
+    //         do Output.printString(",");
+    //         do Output.printInt(pr);
+    //         let isInX = (xl < pr);
+    //         // if (xl < pr | xl = pr) { let isInX = true; }
+    //         // else {let isInX = false;}
+    //     }
+    //     else {
+    //         do Output.moveCursor(20,30);
+    //         do Output.printString("Right-");
+    //         do Output.printInt(xr);
+    //         do Output.printString(",");
+    //         do Output.printInt(pl);
+    //         let isInX = (xr > pl);
+    //         // if (xr > pl | xr = pl) { let isInX = true; }
+    //         // else {let isInX = false;}
+    //     }
+    //     //
+    //     // if (xl > pl | xl = pl) { let isInXL = true; }
+    //     // else {let isInXL = false;}
 
-        if (xr < paddle.getX()+paddle.getWidth() | xr = paddle.getX()+paddle.getWidth())
-        { let isInXR = true; }
-        else{let isInXR = false;}
-        //TOO: bug here maybe. no score update when paddle is ABOVE ball.
-        if (yb > paddle.getY())  { let isInYT=true; }
-        else{ let isInYT=false; }
+    //     // if (xr < pr | xr = pr) { let isInXR = true; }
+    //     // else {let isInXR = false;}
+
+    //     //TOO: bug here maybe. no score update when paddle is ABOVE ball.
+    //     if (yt > pt | yt = pt) { let isInYT=true; }
+    //     else { let isInYT=false; }
         
-        if (yt < paddle.getY()+paddle.getHeight())  { let isInYB=true; }
-        else{ let isInYB=false; }
-        // check
-        if (isInXR & isInXL & isInYB & isInYT)  { return true; }
-        else { return false;}
+    //     if (yb < pb | yb = pb)  { let isInYB=true; }
+    //     else { let isInYB=false; }
+    //     // print
+    //     // do printOverlap(isInXL, isInXR, isInYT, isInYB);
+    //     // check
+    //     if (isInX & isInYB & isInYT)  { return true; }
+    //     // if (isInXR & isInXL & isInYB & isInYT)  { return true; }
+    //     else { return false;}
+    // }
+
+    method void printOverlap(boolean l, boolean r, boolean t, boolean b){
+        var String res;
+        var boolean flag;
+        let flag = false;
+        let res = "L:F R:F T:F B:F";
+        if (l) {
+            do res.setCharAt(2,"T");
+            let flag = true;
+        }
+        if (r) {
+            do res.setCharAt(6,"T");
+            let flag = true;
+        }
+        if (t) {
+            do res.setCharAt(10,"T");
+            let flag = true;
+        }
+        if (b) {
+            do res.setCharAt(14,"T");
+            let flag = true;
+        }
+        if (flag) {
+            do Output.moveCursor(0,20);
+            do Output.printString(res);
+        }
+        // do Output.moveCursor(0,20);
+        // do Output.printString(res);
+        do res.dispose();
+        return;
     }
 
     // /**
@@ -195,7 +258,7 @@ class Ball{
 
     method void flipVelX (){
         do Output.moveCursor(10,10);
-        do Output.printString("in flip ");
+        // do Output.printString("in flip ");
         let velX = velX * (-1);
         return;
     }
@@ -223,33 +286,37 @@ class Ball{
         return y;
     }
 
+    method int getR(){
+        return r;
+    }
+
     /**
     Sets a new vector. The component of the new vector perpendicular to the given normal is equal to this vector's. The component of the new vector parallel to the normal is the negation of this vector's. May be used to simulate semi-elastic collisions if flipping a velocity vector relative to the collision normal.
     */
-    // method void flipVel (int Ax, int Ay) {
-    //     var int normalX;
-    //     var int normalY;
-    //     var int normalMag;
-    //     var int proj;
-    //     var int newX;
-    //     var int newY;
+    method void flipVelocityVector (int Ax, int Ay) {
+        var int normalX;
+        var int normalY;
+        var int normalMag;
+        var int proj;
+        var int newX;
+        var int newY;
 
-    //     let normalX = Ax;
-    //     let normalY = Ay;
-    //     let normalMag = Math.sqrt((normalX * normalX) + (normalY * normalY));
-    //     let proj = ((x * normalX) + (y * normalY)) / normalMag;
-    //     let newX = velX;
-    //     let newY = velY;
+        let normalX = Ax;
+        let normalY = Ay;
+        let normalMag = Math.sqrt((normalX * normalX) + (normalY * normalY));
+        let proj = ((x * normalX) + (y * normalY)) / normalMag;
+        let newX = velX;
+        let newY = velY;
 
-    //     if (proj < 0) {
-    //         // if projection is negative, vector opposes normal.
-    //         // in this case, inverse it along the projection
-    //         let newX = velX - ((normalX * 2 * proj) / normalMag);
-    //         let newY = velY - ((normalY * 2 * proj) / normalMag);
-    //     }
+        if (proj < 0) {
+            // if projection is negative, vector opposes normal.
+            // in this case, inverse it along the projection
+            let newX = velX - ((normalX * 2 * proj) / normalMag);
+            let newY = velY - ((normalY * 2 * proj) / normalMag);
+        }
 
-    //     let velX = newX;
-    //     let velY = newY;
-    //     return;
-    // }
+        let velX = newX;
+        let velY = newY;
+        return;
+    }
 }

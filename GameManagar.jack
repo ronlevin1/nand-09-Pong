@@ -18,7 +18,7 @@ class GameManagar{
         let rightDirection = 0;
         let leftDirection = 0;
 
-        let ball = Ball.new(1); // TODO: change velocity
+        let ball = Ball.new(1);
         return this;
     }
 
@@ -59,15 +59,122 @@ class GameManagar{
     }
 
     method void moveBall(){
-        if((ball.checkOverlap(leftPaddle))){
+        var boolean flag;
+        let flag = false;
+
+        if((checkOverlap(leftPaddle, true))){
+            let flag = true;
+            do ball.draw();
             do ball.flipVelX();
         }
-        if((ball.checkOverlap(rightPaddle))){
+        if((checkOverlap(rightPaddle, false))){
+            let flag = true;
+            do ball.draw();
             do ball.flipVelX();
         }
+        // todo: delete
+        if(flag){
+            // do Output.moveCursor(15,15);
+            // do Output.printString("overlapping");
+        }
+        else{
+            // do Output.moveCursor(15,15);
+            // do Output.printString("NOPE       ");
+        }
+        
         do ball.move();
         //TODO: check if ball is behind paddle -> score!
         do checkScore();
+        return;
+    }
+    
+    /**
+    returns: true if ball overlapping paddle; false otherwise. 
+    */
+    method boolean checkOverlap(Paddle paddle, boolean isLeft) {
+        // ball (x, y) and paddle (p) borders
+        var int xr, xl, yt, yb;
+        var int pr, pl, pt, pb;
+        // paddle booleans
+        // var boolean isInXR;
+        // var boolean isInXL;
+        var boolean isInX;
+        var boolean isInYT;
+        var boolean isInYB;
+        // ball borders
+        let xr = ball.getX()+ball.getR();
+        let xl= ball.getX()-ball.getR();
+        let yt= ball.getY()-ball.getR();
+        let yb= ball.getY()+ball.getR();
+        // paddle borders
+        let pl = paddle.getX();
+        let pr = paddle.getX()+paddle.getWidth();
+        let pt = paddle.getY();
+        let pb = paddle.getY()+paddle.getHeight();
+        //
+        if (isLeft) {
+            // do Output.moveCursor(20,0);
+            // do Output.printString("Left-");
+            // do Output.printInt(xl);
+            // do Output.printString(",");
+            // do Output.printInt(pr);
+            // let isInX = (xl < pr);
+            if ((xl < pr) | (xl = pr)) { let isInX = true; }
+            else {let isInX = false;}
+        }
+        else {
+            // do Output.moveCursor(20,30);
+            // do Output.printString("Right-");
+            // do Output.printInt(xr);
+            // do Output.printString(",");
+            // do Output.printInt(pl);
+            // let isInX = (xr > pl);
+            if ((xr > pl) | (xr = pl)) { let isInX = true; }
+            else {let isInX = false;}
+        }
+        //
+        // if (xl > pl | xl = pl) { let isInXL = true; }
+        // else {let isInXL = false;}
+
+        // if (xr < pr | xr = pr) { let isInXR = true; }
+        // else {let isInXR = false;}
+
+        //TOO: bug here maybe. no score update when paddle is ABOVE ball.
+        if ((yt > pt) | (yt = pt)) { let isInYT=true; }
+        else { let isInYT=false; }
+        
+        if ((yb < pb) | (yb = pb))  { let isInYB=true; }
+        else { let isInYB=false; }
+        // print
+        // do printOverlap(isInXL, isInXR, isInYT, isInYB);
+        // check
+        if (isInX & isInYB & isInYT)  { return true; }
+        // if (isInXR & isInXL & isInYB & isInYT)  { return true; }
+        else { return false;}
+    }
+
+    method void checkScore() {
+        var int leftLim, rightLim;
+        var boolean flag;
+        var int gap;
+        let gap = 15;
+        let leftLim = leftPaddle.getX() - gap;
+        let rightLim = rightPaddle.getX() + rightPaddle.getWidth() + gap;
+        //
+        if (ball.getX() < leftLim) { // Right player scores
+            let rightScore = rightScore + 1;
+            let flag = true;
+        }
+        if (ball.getX() > rightLim) { // Left player scores
+            let leftScore = leftScore + 1;
+            let flag = true;
+        }
+        if (flag) {
+            do displayScore();
+            do Sys.wait(4000);  // delays the next movement
+            do ball.erase();
+            do ball.reset();
+        }
         return;
     }
 
@@ -84,30 +191,6 @@ class GameManagar{
         if (rightDirection = 2) { do rightPaddle.moveDown(); }
         //
         do Sys.wait(5);  // delays the next movement
-        return;
-    }
-    
-    //todo
-    method void checkScore() {
-        var int leftLim, rightLim;
-        var boolean flag;
-        let leftLim = leftPaddle.getX();
-        let rightLim = rightPaddle.getX() + rightPaddle.getWidth();
-        //
-        if (ball.getX() < leftLim) { // Right player scores
-            let rightScore = rightScore + 1;
-            let flag = true;
-        }
-        if (ball.getX() > rightLim) { // Left player scores
-            let leftScore = leftScore + 1;
-            let flag = true;
-        }
-        if (flag) {
-            do displayScore();
-            do Sys.wait(150);  // delays the next movement
-            do ball.erase();
-            do ball.reset();
-        }
         return;
     }
 
@@ -131,7 +214,7 @@ class GameManagar{
         do Output.moveCursor(0, 0);
         // do Output.printString(scoreMsg);
         do Output.printString("Left ");
-        do Output.printString(digitToString(leftScore)); // todo: change to score field
+        do Output.printString(digitToString(leftScore));
         do Output.printString(" : ");
         do Output.printString(digitToString(rightScore));
         do Output.printString(" Right");

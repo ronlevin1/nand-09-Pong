@@ -1,7 +1,5 @@
 class Paddle{
-    // Responsibilities:
-    // - Manage paddle position and movement.
-    // - Ensure paddle stays within screen bounds.
+    // (x, y) is top-left corner.
     field int x;
     field int y;
     // constants
@@ -95,6 +93,9 @@ class Paddle{
     }
     method int getWidth () {
         return width;
+    }
+    method boolean getIsLeft () {
+        return isLeft;
     }
 
     method void dispose() {
