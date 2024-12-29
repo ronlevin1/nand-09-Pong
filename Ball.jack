@@ -23,6 +23,53 @@ class Ball{
         return this;
     }
 
+    // returns: true if ball overlapping paddle; false otherwise. 
+    method boolean checkOverlap(Paddle paddle) {
+        // ball (x, y) and paddle (p) borders
+        var int xr, xl, yt, yb;
+        var int pr, pl, pt, pb;
+        // paddle booleans
+        var boolean isInX;
+        var boolean isInYT;
+        var boolean isInYB;
+        //
+        let xr = x+r;
+        let xl=x-r;
+        let yt=y-r;
+        let yb=y+r;
+        //
+        let pl = paddle.getX();
+        let pr = paddle.getX()+paddle.getWidth();
+        let pt = paddle.getY();
+        let pb = paddle.getY()+paddle.getHeight();
+        //
+        if (paddle.getIsLeft()) {
+            do Output.moveCursor(20,0);
+            do Output.printString("Left-");
+            do Output.printInt(xl);
+            do Output.printString(",");
+            do Output.printInt(pr);
+            let isInX = (xl < pr);
+        }
+        else {
+            do Output.moveCursor(20,30);
+            do Output.printString("Right-");
+            do Output.printInt(xr);
+            do Output.printString(",");
+            do Output.printInt(pl);
+            let isInX = (xr > pl);
+        }
+        //
+        if (yt > pt | yt = pt) { let isInYT=true; }
+        else { let isInYT=false; }
+        
+        if (yb < pb | yb = pb)  { let isInYB=true; }
+        else { let isInYB=false; }
+        // check
+        if (isInX & isInYB & isInYT)  { return true; }
+        else { return false;}
+    }
+
     method boolean isPosLegal(){
         var int xr, xl, yt, yb;
         var boolean xInRangeL, yInRangeT, xInRangeR, yInRangeB;
@@ -98,70 +145,60 @@ class Ball{
         return;
     }
 
-    // /**
-    // returns: true if ball overlapping paddle; false otherwise. 
-    // */
-    // method boolean checkOverlap(Paddle paddle) {
-    //     // ball (x, y) and paddle (p) borders
-    //     var int xr, xl, yt, yb;
-    //     var int pr, pl, pt, pb;
-    //     // paddle booleans
-    //     // var boolean isInXR;
-    //     // var boolean isInXL;
-    //     var boolean isInX;
-    //     var boolean isInYT;
-    //     var boolean isInYB;
-    //     //
-    //     let xr = x+r;
-    //     let xl=x-r;
-    //     let yt=y-r;
-    //     let yb=y+r;
-    //     //
-    //     let pl = paddle.getX();
-    //     let pr = paddle.getX()+paddle.getWidth();
-    //     let pt = paddle.getY();
-    //     let pb = paddle.getY()+paddle.getHeight();
-    //     //
-    //     if (paddle.getIsLeft()) {
-    //         do Output.moveCursor(20,0);
-    //         do Output.printString("Left-");
-    //         do Output.printInt(xl);
-    //         do Output.printString(",");
-    //         do Output.printInt(pr);
-    //         let isInX = (xl < pr);
-    //         // if (xl < pr | xl = pr) { let isInX = true; }
-    //         // else {let isInX = false;}
-    //     }
-    //     else {
-    //         do Output.moveCursor(20,30);
-    //         do Output.printString("Right-");
-    //         do Output.printInt(xr);
-    //         do Output.printString(",");
-    //         do Output.printInt(pl);
-    //         let isInX = (xr > pl);
-    //         // if (xr > pl | xr = pl) { let isInX = true; }
-    //         // else {let isInX = false;}
-    //     }
-    //     //
-    //     // if (xl > pl | xl = pl) { let isInXL = true; }
-    //     // else {let isInXL = false;}
-
-    //     // if (xr < pr | xr = pr) { let isInXR = true; }
-    //     // else {let isInXR = false;}
-
-    //     //TOO: bug here maybe. no score update when paddle is ABOVE ball.
-    //     if (yt > pt | yt = pt) { let isInYT=true; }
-    //     else { let isInYT=false; }
+    /**
+    returns: true if ball overlapping paddle; false otherwise. 
+    */
+    method boolean oldCheckOverlap(Paddle paddle) {
+        // ball (x, y) and paddle (p) borders
+        var int xr, xl, yt, yb;
+        var int pr, pl, pt, pb;
+        // paddle booleans
+        var boolean isInX;
+        var boolean isInYT;
+        var boolean isInYB;
+        //
+        let xr = x+r;
+        let xl=x-r;
+        let yt=y-r;
+        let yb=y+r;
+        //
+        let pl = paddle.getX();
+        let pr = paddle.getX()+paddle.getWidth();
+        let pt = paddle.getY();
+        let pb = paddle.getY()+paddle.getHeight();
+        //
+        if (paddle.getIsLeft()) {
+            do Output.moveCursor(20,0);
+            do Output.printString("Left-");
+            do Output.printInt(xl);
+            do Output.printString(",");
+            do Output.printInt(pr);
+            let isInX = (xl < pr);
+        }
+        else {
+            do Output.moveCursor(20,30);
+            do Output.printString("Right-");
+            do Output.printInt(xr);
+            do Output.printString(",");
+            do Output.printInt(pl);
+            let isInX = (xr > pl);
+        }
+        //
+        if (yt > pt | yt = pt) { let isInYT=true; }
+        else { let isInYT=false; }
         
-    //     if (yb < pb | yb = pb)  { let isInYB=true; }
-    //     else { let isInYB=false; }
-    //     // print
-    //     // do printOverlap(isInXL, isInXR, isInYT, isInYB);
-    //     // check
-    //     if (isInX & isInYB & isInYT)  { return true; }
-    //     // if (isInXR & isInXL & isInYB & isInYT)  { return true; }
-    //     else { return false;}
-    // }
+        if (yb < pb | yb = pb)  { let isInYB=true; }
+        else { let isInYB=false; }
+        // check
+        if (isInX & isInYB & isInYT)  { return true; }
+        else { return false;}
+    
+        if (yb < pb | yb = pb)  { let isInYB=true; }
+        else { let isInYB=false; }
+        // check
+        if (isInX & isInYB & isInYT)  { return true; }
+        else { return false;}
+    }
 
     method void printOverlap(boolean l, boolean r, boolean t, boolean b){
         var String res;
@@ -194,67 +231,67 @@ class Ball{
         return;
     }
 
-    // /**
-    // return: 0 for no collision; 1 for collision with left, 2 for collision with right.
-    // */
-    // method int checkCollision (Paddle leftPaddle, Paddle rightPaddle) {
-    //     var int xr, xl, yt, yb;
-    //     // w/ right
-    //     var boolean isBehindR;
-    //     var boolean isAboveRightTop;
-    //     var boolean isBelowRightBottom;
-    //     // 
-    //     var boolean isBehindL;
-    //     var boolean isAboveLeftTop;
-    //     var boolean isBelowLeftBottom;
-    //     let xr = x+r;
-    //     let xl=x-r;
-    //     let yt=y-r;
-    //     let yb=y+r;
-    //     // assign
-    //     if (xr > rightPaddle.getX() | xr = rightPaddle.getX()) {
-    //         let isBehindR = true;
-    //     } else {
-    //         let isBehindR = false;
-    //     }
-    //     if (yt > rightPaddle.getY() | yt = rightPaddle.getY()) {
-    //         let isAboveRightTop = true;
-    //     } else {
-    //         let isAboveRightTop = false;
-    //     }
-    //     if (yb < (rightPaddle.getY() + rightPaddle.getHeight()) | yb = (rightPaddle.getY() + rightPaddle.getHeight())) {
-    //         let isBelowRightBottom = true;
-    //     } else {
-    //         let isBelowRightBottom = false;
-    //     }
-    //     // check
-    //     if ((isBehindR) & (isAboveRightTop) & (isBelowRightBottom)) {
-    //         return 2;
-    //     }
-    //     // w/ left
-    //     // assign
-    //     if (xl = leftPaddle.getX() | xl < leftPaddle.getX() + leftPaddle.getWidth() | xl = leftPaddle.getX() + leftPaddle.getWidth()) {
-    //         let isBehindL = true;
-    //     } else {
-    //         let isBehindL = false;
-    //     }
-    //     if (yt > leftPaddle.getY() | yt = leftPaddle.getY()) {
-    //         let isAboveLeftTop = true;
-    //     } else {
-    //         let isAboveLeftTop = false;
-    //     }
-    //     if (yb < (leftPaddle.getY() + leftPaddle.getHeight()) | yb = (leftPaddle.getY() + leftPaddle.getHeight())) {
-    //         let isBelowLeftBottom = true;
-    //     } else {
-    //         let isBelowLeftBottom = false;
-    //     }
-    //     // check
-    //     if ((isBehindL) & (isAboveLeftTop) & (isBelowLeftBottom)) {
-    //         return 1;
-    //     }
-    //     // no collision at all
-    //     return 0;
-    // }
+    /**
+    return: 0 for no collision; 1 for collision with left, 2 for collision with right.
+    */
+    method int oldCheckCollision (Paddle leftPaddle, Paddle rightPaddle) {
+        var int xr, xl, yt, yb;
+        // w/ right
+        var boolean isBehindR;
+        var boolean isAboveRightTop;
+        var boolean isBelowRightBottom;
+        // 
+        var boolean isBehindL;
+        var boolean isAboveLeftTop;
+        var boolean isBelowLeftBottom;
+        let xr = x+r;
+        let xl=x-r;
+        let yt=y-r;
+        let yb=y+r;
+        // assign
+        if (xr > rightPaddle.getX() | xr = rightPaddle.getX()) {
+            let isBehindR = true;
+        } else {
+            let isBehindR = false;
+        }
+        if (yt > rightPaddle.getY() | yt = rightPaddle.getY()) {
+            let isAboveRightTop = true;
+        } else {
+            let isAboveRightTop = false;
+        }
+        if (yb < (rightPaddle.getY() + rightPaddle.getHeight()) | yb = (rightPaddle.getY() + rightPaddle.getHeight())) {
+            let isBelowRightBottom = true;
+        } else {
+            let isBelowRightBottom = false;
+        }
+        // check
+        if ((isBehindR) & (isAboveRightTop) & (isBelowRightBottom)) {
+            return 2;
+        }
+        // w/ left
+        // assign
+        if (xl = leftPaddle.getX() | xl < leftPaddle.getX() + leftPaddle.getWidth() | xl = leftPaddle.getX() + leftPaddle.getWidth()) {
+            let isBehindL = true;
+        } else {
+            let isBehindL = false;
+        }
+        if (yt > leftPaddle.getY() | yt = leftPaddle.getY()) {
+            let isAboveLeftTop = true;
+        } else {
+            let isAboveLeftTop = false;
+        }
+        if (yb < (leftPaddle.getY() + leftPaddle.getHeight()) | yb = (leftPaddle.getY() + leftPaddle.getHeight())) {
+            let isBelowLeftBottom = true;
+        } else {
+            let isBelowLeftBottom = false;
+        }
+        // check
+        if ((isBehindL) & (isAboveLeftTop) & (isBelowLeftBottom)) {
+            return 1;
+        }
+        // no collision at all
+        return 0;
+    }
 
     method void flipVelX (){
         do Output.moveCursor(10,10);
@@ -293,7 +330,7 @@ class Ball{
     /**
     Sets a new vector. The component of the new vector perpendicular to the given normal is equal to this vector's. The component of the new vector parallel to the normal is the negation of this vector's. May be used to simulate semi-elastic collisions if flipping a velocity vector relative to the collision normal.
     */
-    method void flipVelocityVector (int Ax, int Ay) {
+    method void oldFlipVelocityVector (int Ax, int Ay) {
         var int normalX;
         var int normalY;
         var int normalMag;
@@ -317,6 +354,18 @@ class Ball{
 
         let velX = newX;
         let velY = newY;
+        return;
+    }
+
+    // old functionality in case of errors
+    method void oldFunctionality(){
+        var Paddle leftPaddle;
+        var Paddle rightPaddle;
+        let leftPaddle = Paddle.new(1);
+        let rightPaddle = Paddle.new(2);
+        do oldFlipVelocityVector(1,0);
+        do oldCheckCollision(leftPaddle, rightPaddle);
+        do oldCheckOverlap(leftPaddle);
         return;
     }
 }

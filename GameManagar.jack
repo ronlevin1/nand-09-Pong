@@ -277,16 +277,20 @@ class GameManagar{
     */
     method void end(){
         var String msg1,msg2,msg3;
+        var Array arr;
+        let arr = Array.new(3);
         let msg1 = "Game Finished!";
         let msg2 = "Final Score: ";
+        let arr[1] = msg1;
+        let arr[2] = msg2;
 
         do Screen.clearScreen();
         do Output.moveCursor(11,23);
-        do Output.printString(msg1);
+        do Output.printString(arr[1]);
         do Output.println();
 
         do Output.moveCursor(14,20);
-        do Output.printString(msg2);
+        do Output.printString(arr[2]);
         do Output.printInt(leftScore);
         do Output.printString(" - ");
         do Output.printInt(rightScore);
@@ -309,6 +313,7 @@ class GameManagar{
         do msg1.dispose();
         do msg2.dispose();
         do msg3.dispose();
+        do arr.dispose();
         do Screen.clearScreen();
         let exit = true; // set class exit flag
         return;
